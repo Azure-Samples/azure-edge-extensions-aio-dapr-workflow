@@ -13,9 +13,9 @@ sudo apt-get update && sudo apt-get install mosquitto-clients -y
 sudo apt-get update && sudo apt-get install libnss-myhostname -y
 
 # Install mqttui
-wget https://github.com/EdJoPaTo/mqttui/releases/download/v0.19.0/mqttui-v0.19.0-aarch64-unknown-linux-gnu.deb && \
-    sudo apt-get install ./mqttui-v0.19.0-aarch64-unknown-linux-gnu.deb && \
-    rm -rf ./mqttui-v0.19.0-aarch64-unknown-linux-gnu.deb
+wget https://github.com/EdJoPaTo/mqttui/releases/download/v0.19.0/mqttui-v0.19.0-x86_64-unknown-linux-gnu.deb && \
+    sudo apt-get install ./mqttui-v0.19.0-x86_64-unknown-linux-gnu.deb && \
+    rm -rf ./mqttui-v0.19.0-x86_64-unknown-linux-gnu.deb
 
 # Create local registry for K3D and local development
 if [[ $(docker ps -f name=k3d-devregistry.localhost -q) ]]; then
