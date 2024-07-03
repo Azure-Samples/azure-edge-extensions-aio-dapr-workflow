@@ -6,20 +6,18 @@
 	"image": "mcr.microsoft.com/devcontainers/base:jammy",
 	"features": {
 		"ghcr.io/devcontainers/features/azure-cli:1": {
-			"version": "latest",
 			"extensions": "connectedk8s,k8s-extension,azure-iot-ops"
 		},
 		"ghcr.io/devcontainers/features/dotnet:2": {
 			"version": "8.0"
 		},
 		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
-			"version": "latest",
-			"helm": "latest",
 			"minikube": "none"
 		},
 		"ghcr.io/rio/features/k3d:1": {},
-		"ghcr.io/dapr/cli/dapr-cli:0": {
-			"version": "latest"
+		"ghcr.io/dapr/cli/dapr-cli:0": {},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"moby": false
 		}
 	},
 	"hostRequirements": {
@@ -27,7 +25,7 @@
 		"memory": "8gb",
 		"storage": "32gb"
 	},
-	// "postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh",
+	"postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh",
 	"customizations": {
 		"vscode": {
 			"extensions": [

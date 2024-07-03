@@ -6,9 +6,6 @@ ARCCLUSTERNAME := arc-dapr-workflow
 RESOURCEGROUP := rg-dapr-workflow
 LOCATION := westeurope
 VERSION := $(shell grep "<Version>" ./src/AzureIoTOperations.DaprWorkflow/AzureIoTOperations.DaprWorkflow.csproj | sed 's/[^0-9.]*//g')
-
-all:
-	echo $(VERSION)
 	
 create_k3d_cluster:
 	@echo "Creating k3d cluster..."
@@ -22,13 +19,13 @@ install_dapr:
 	helm repo update
 	helm upgrade --install dapr dapr/dapr --version=1.13 --namespace dapr-system --create-namespace --wait
 
+deploy_aio:
+	@echo "Deploying AIO..."
+	bash ./infra/deploy-aio.sh $(ARCCLUSTERNAME) $(RESOURCEGROUP) $(LOCATION)
+
 deploy_dapr_components:
 	@echo "Deploying dapr components..."
 	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/components.yaml
-
-deploy_aio:
-	@echo "Deploying AIO..."
-	bash ./deployment/deploy-aio.sh $(ARCCLUSTERNAME) $(RESOURCEGROUP) $(LOCATION)
 
 build_dapr_workflow_app:
 	@echo "Building dapr workflow app..."

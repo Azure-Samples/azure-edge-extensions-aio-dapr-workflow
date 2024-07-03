@@ -72,6 +72,7 @@ spec:
       #     limits:
       #       cpu: "0.5"
       #       memory: "500Mi"
+
 ---
 kind: Service
 apiVersion: v1
