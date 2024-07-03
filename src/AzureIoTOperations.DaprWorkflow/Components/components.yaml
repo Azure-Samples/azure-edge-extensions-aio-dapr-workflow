@@ -1,0 +1,69 @@
+# Pub/sub component
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: aio-mq-pubsub
+  namespace: azure-iot-operations
+  annotations:
+    dapr.io/component-container: >
+      {
+        "name": "aio-mq-components",
+        "image": "ghcr.io/azure/iot-mq-dapr-components:latest",
+        "volumeMounts": [
+          {
+            "name": "mqtt-client-token",
+            "mountPath": "/var/run/secrets/tokens"
+          },
+          {
+            "name": "aio-ca-trust-bundle",
+            "mountPath": "/var/run/certs/aio-mq-ca-cert"
+          }
+        ]
+      }
+spec:
+  type: pubsub.aio-mq-pubsub-pluggable # DO NOT CHANGE
+  version: v1
+  metadata:
+  - name: url
+    value: "aio-mq-dmqtt-frontend:8883"
+  - name: satTokenPath
+    value: "/var/run/secrets/tokens/mqtt-client-token"
+  - name: tlsEnabled
+    value: true
+  - name: caCertPath
+    value: "/var/run/certs/aio-mq-ca-cert/ca.crt"
+---
+# State Management component
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: aio-mq-statestore
+  namespace: azure-iot-operations
+  annotations:
+    dapr.io/component-container: >
+      {
+        "name": "aio-mq-components",
+        "image": "ghcr.io/azure/iot-mq-dapr-components:latest",
+        "volumeMounts": [
+          {
+            "name": "mqtt-client-token",
+            "mountPath": "/var/run/secrets/tokens"
+          },
+          {
+            "name": "aio-ca-trust-bundle",
+            "mountPath": "/var/run/certs/aio-mq-ca-cert"
+          }
+        ]
+      }
+spec:
+  type: state.aio-mq-statestore-pluggable # DO NOT CHANGE
+  version: v1
+  metadata:
+  - name: url
+    value: "aio-mq-dmqtt-frontend:8883"
+  - name: satTokenPath
+    value: "/var/run/secrets/tokens/mqtt-client-token"
+  - name: tlsEnabled
+    value: true
+  - name: caCertPath
+    value: "/var/run/certs/aio-mq-ca-cert/ca.crt"

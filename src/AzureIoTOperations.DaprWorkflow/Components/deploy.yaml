@@ -1,0 +1,89 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: daprworkflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: daprworkflow
+  template:
+    metadata:
+      labels:
+        app: daprworkflow
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/unix-domain-socket-path: "/tmp/dapr-components-sockets"
+        dapr.io/app-id: "daprworkflow"
+        dapr.io/app-port: "5002"
+        dapr.io/grpc-port: "5005"
+        dapr.io/app-protocol: "grpc"
+        dapr.io/sidecar-liveness-probe-delay-seconds: "10"
+        dapr.io/sidecar-readiness-probe-delay-seconds: "1"
+        dapr.io/sidecar-readiness-probe-timeout-seconds: "3"
+    spec:
+      volumes:
+      - name: dapr-unix-domain-socket
+        emptyDir: {}
+
+      # SAT token used to authenticate between Dapr and the MQTT broker
+      - name: daprworkflow-client-token
+        projected:
+          sources:
+            - serviceAccountToken:
+                path: daprworkflow-client-token
+                audience: aio-mq
+                expirationSeconds: 86400
+
+      # Certificate chain for Dapr to validate the MQTT broker
+      - name: aio-ca-trust-bundle
+        configMap:
+          name: aio-ca-trust-bundle-test-only
+
+      containers:
+      # Container for the Dapr Workflow C# Application 
+      - name: daprworkflow
+        image: __{container_registry}__/daprworkflow:__{image_version}__
+        ports:
+        - containerPort: 5002
+        resources:
+          requests:
+            cpu: "0.1"
+            memory: "100Mi"
+          limits:
+            cpu: "0.5"
+            memory: "500Mi"
+
+      # Container for the Pub/sub component
+      # - name: aio-mq-pubsub-pluggable
+      #   image: ghcr.io/azure/iot-mq-dapr-components/pubsub:latest
+      #   volumeMounts:
+      #   - name: dapr-unix-domain-socket
+      #     mountPath: /tmp/dapr-components-sockets
+      #   - name: daprworkflow-client-token
+      #     mountPath: /var/run/secrets/tokens
+      #   - name: aio-ca-trust-bundle
+      #     mountPath: /var/run/certs/aio-mq-ca-cert/
+      #   resources:
+      #     requests:
+      #       cpu: "0.1"
+      #       memory: "100Mi"
+      #     limits:
+      #       cpu: "0.5"
+      #       memory: "500Mi"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: daprworkflow-svc
+  labels:
+    app: daprworkflow
+spec:
+  selector:
+    app: daprworkflow
+  ports:
+  - protocol: TCP
+    port: 5002
+    targetPort: 5002
+  type: LoadBalancer
