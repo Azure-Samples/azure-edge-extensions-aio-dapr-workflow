@@ -29,7 +29,7 @@ deploy_dapr_components:
 
 build_dapr_workflow_app:
 	@echo "Building dapr workflow app..."
-	docker build -f ./src/AzureIoTOperations.DaprWorkflow ./src/AzureIoTOperations.DaprWorkflow/Dockerfile -t daprworkflow:$(VERSION)
+	docker build ./src/AzureIoTOperations.DaprWorkflow -f ./src/AzureIoTOperations.DaprWorkflow/Dockerfile -t daprworkflow:$(VERSION)
 	docker tag daprworkflow:$(VERSION) $(K3DREGISTRYNAME)/daprworkflow:$(VERSION)
 	docker push $(K3DREGISTRYNAME)/daprworkflow:$(VERSION)
 
