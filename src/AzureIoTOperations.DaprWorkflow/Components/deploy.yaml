@@ -14,7 +14,7 @@ spec:
         app: daprworkflow
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/unix-domain-socket-path: "/tmp/dapr-components-sockets"
+        dapr.io/inject-pluggable-components: "true"
         dapr.io/app-id: "daprworkflow"
         dapr.io/app-port: "5002"
         dapr.io/grpc-port: "5005"
@@ -23,9 +23,8 @@ spec:
         dapr.io/sidecar-readiness-probe-delay-seconds: "1"
         dapr.io/sidecar-readiness-probe-timeout-seconds: "3"
     spec:
+      serviceAccountName: daprworkflow-client
       volumes:
-      - name: dapr-unix-domain-socket
-        emptyDir: {}
 
       # SAT token used to authenticate between Dapr and the MQTT broker
       - name: daprworkflow-client-token
@@ -36,7 +35,7 @@ spec:
                 audience: aio-mq
                 expirationSeconds: 86400
 
-      # Certificate chain for Dapr to validate the MQTT broker
+    # Certificate chain for Dapr to validate the MQTT broker
       - name: aio-ca-trust-bundle
         configMap:
           name: aio-ca-trust-bundle-test-only
@@ -44,7 +43,7 @@ spec:
       containers:
       # Container for the Dapr Workflow C# Application 
       - name: daprworkflow
-        image: __{container_registry}__/daprworkflow:__{image_version}__
+        image: k3d-devregistry.localhost:5500/daprworkflow:1.0.0
         ports:
         - containerPort: 5002
         resources:

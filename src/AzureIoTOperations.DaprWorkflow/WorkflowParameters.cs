@@ -6,7 +6,7 @@ namespace AzureIoTOperations.DaprWorkflow
     {
         [Option(
             "receiverPubSubName",
-            Default = "local-pub-sub",
+            Default = "aio-mq-pubsu",
             Required = false,
             HelpText = "Dapr pubsub messaging component name for receiving messages.")]
         public string? ReceiverPubSubName { get; set; }
@@ -20,7 +20,7 @@ namespace AzureIoTOperations.DaprWorkflow
 
         [Option(
             "senderPubSubName",
-            Default = "gateway-pub-sub",
+            Default = "aio-mq-pubsub",
             Required = false,
             HelpText = "Dapr pubsub messaging component name for sending messages.")]
         public string? SenderPubSubName { get; set; }

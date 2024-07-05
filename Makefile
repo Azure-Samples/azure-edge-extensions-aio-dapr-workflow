@@ -6,7 +6,9 @@ ARCCLUSTERNAME := arc-dapr-workflow
 RESOURCEGROUP := rg-dapr-workflow
 LOCATION := westeurope
 VERSION := $(shell grep "<Version>" ./src/AzureIoTOperations.DaprWorkflow/AzureIoTOperations.DaprWorkflow.csproj | sed 's/[^0-9.]*//g')
-	
+
+all: create_k3d_cluster install_dapr deploy_aio deploy_dapr_components build_dapr_workflow_app deploy_dapr_workflow_app
+
 create_k3d_cluster:
 	@echo "Creating k3d cluster..."
 	k3d cluster create $(K3DCLUSTERNAME) $(PORTFORWARDING) --registry-use $(K3DREGISTRYNAME) --servers 1
@@ -26,6 +28,8 @@ deploy_aio:
 deploy_dapr_components:
 	@echo "Deploying dapr components..."
 	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/components.yaml
+	@echo "Create service account..."
+	kubectl create sa daprworkflow-client -n azure-iot-operations --dry-run=client -o yaml | kubectl apply -f -
 
 build_dapr_workflow_app:
 	@echo "Building dapr workflow app..."
