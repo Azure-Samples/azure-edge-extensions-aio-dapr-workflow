@@ -17,7 +17,6 @@ spec:
         dapr.io/inject-pluggable-components: "true"
         dapr.io/app-id: "daprworkflow"
         dapr.io/app-port: "5002"
-        dapr.io/grpc-port: "5005"
         dapr.io/app-protocol: "grpc"
         dapr.io/sidecar-liveness-probe-delay-seconds: "10"
         dapr.io/sidecar-readiness-probe-delay-seconds: "1"
@@ -43,7 +42,7 @@ spec:
       containers:
       # Container for the Dapr Workflow C# Application 
       - name: daprworkflow
-        image: k3d-devregistry.localhost:5500/daprworkflow:1.0.0
+        image: __{container_registry}__/daprworkflow:__{image_version}__
         ports:
         - containerPort: 5002
         resources:
