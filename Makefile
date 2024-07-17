@@ -14,6 +14,8 @@ create_k3d_cluster:
 	k3d cluster create $(K3DCLUSTERNAME) $(PORTFORWARDING) --registry-use $(K3DREGISTRYNAME) --servers 1
 	@echo "Creating namespace dapr-workflow..."
 	kubectl create namespace dapr-workflow
+	@echo "Deploying mqttui tool..."
+	kubectl apply -f https://raw.githubusercontent.com/Azure-Samples/explore-iot-operations/main/samples/quickstarts/mqtt-client.yaml
 
 install_dapr:
 	@echo "Installing dapr..."

@@ -46,7 +46,7 @@ This project framework provides the following features:
 ![vs-code](img/vs-code-desktop.png)
 5. Once the setup has been initialized, the dev container will have initialized K3D local container registry for development purposes. The environment is now ready for deploying the K3D cluster, initializing Azure IoT Operations and Azure Arc. The container registry is available inside the dev container and inside the K3D cluster under `k3d-devregistry.localhost:5500`
 
-### Quickstart: Deploying up Azure IoT Operations
+### Quickstart: Deploy Azure IoT Operations
 
 * Open a shell terminal to run all of the following scripts
 * Login into your Azure tenant and set a default subscription
@@ -57,7 +57,19 @@ az account set --subscription "mysubscription_name_or_id"
 az account show
 ```
 
-run `make` in the root folder of the workspace to deploy the K3D cluster, Azure Arc-enable the cluster, install Azure IoT Operations and deploy the Dapr Workflow application as well. If you want to deploy only a specific target in the makefile you can run `make <target>`.
+* Run `make` in the root folder of the workspace to deploy the K3D cluster, Azure Arc-enable the cluster, install Azure IoT Operations and deploy the Dapr Workflow application as well. If you want to deploy only a specific target in the makefile you can run `make <target>`.
+
+### Publish Data to Azure IoT MQ
+
+1. Open a new Terminal in VS Code and run:
+`kubectl exec --stdin --tty mqtt-client -n azure-iot-operations -- sh`
+2. At the shell in the mqtt-client pod, run the following command to connect to the MQ broker using the mqttui tool:
+`mqttui -b mqtts://aio-mq-dmqtt-frontend:8883 -u '$sat' --password $(cat /var/run/secrets/tokens/mq-sat) --insecure`
+3. Open another terminal window and repeat step 1 and run inside the container:
+`mosquitto_pub -h localhost -p 1883 -t telemetry -m '{"ambient":{"temperature":10}}'`
+4. Verify that an enriched message is publish on the telemetry-enriched topic by using the mqttui tool in terminal of step 2
+5. Optionally, you can also verify by subscribing via in another terminal window (step 1 required as well):
+`mosquitto_sub -h localhost -p 1883 -t enriched-telemetry`
 
 ### Deploy a new version of the application
 
