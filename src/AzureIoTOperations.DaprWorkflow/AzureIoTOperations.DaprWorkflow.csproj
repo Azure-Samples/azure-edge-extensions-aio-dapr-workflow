@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>1.0.0</Version>
+    <Version>1.0.3</Version>
   </PropertyGroup>
   <ItemGroup>
     <Protobuf Include="Protos\*.proto" ProtoRoot="Protos" GrpcServices="None" />

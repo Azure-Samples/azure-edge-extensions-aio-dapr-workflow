@@ -67,3 +67,5 @@ spec:
     value: true
   - name: caCertPath
     value: "/var/run/certs/aio-mq-ca-cert/ca.crt"
+  - name: actorStateStore
+    value: "true"

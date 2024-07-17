@@ -27,7 +27,6 @@ namespace AzureIoTOperations.DaprWorkflow.Services
 
             _receiverPubsubName = parameters.ReceiverPubSubName;
             _receiverPubsubTopicName = parameters.ReceiverPubSubTopicName;
-
         }
 
         public override Task<ListTopicSubscriptionsResponse> ListTopicSubscriptions(
@@ -45,7 +44,7 @@ namespace AzureIoTOperations.DaprWorkflow.Services
                     }
                 }
             };
-
+            _logger.LogInformation($"Subscribed to pub/sub: {_receiverPubsubName}, topic: {_receiverPubsubTopicName}");
             return Task.FromResult(subscriptionsResponse);
         }
 

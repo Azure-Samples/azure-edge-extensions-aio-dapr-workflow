@@ -19,7 +19,7 @@ install_dapr:
 	@echo "Installing dapr..."
 	helm repo add dapr https://dapr.github.io/helm-charts/
 	helm repo update
-	helm upgrade --install dapr dapr/dapr --version=1.13 --namespace dapr-system --create-namespace --wait
+	helm upgrade --install dapr dapr/dapr --namespace dapr-system --create-namespace --wait
 
 deploy_aio:
 	@echo "Deploying AIO..."
@@ -46,3 +46,9 @@ deploy_dapr_workflow_app:
 clean:
 	@echo "Cleaning up..."
 	k3d cluster delete $(K3DCLUSTERNAME)
+
+install_redis:
+	@echo "Installing redis..."
+	helm repo add redis-stack https://redis-stack.github.io/helm-redis-stack/
+	helm repo update
+	helm upgrade --install redis-stack redis-stack/redis-stack --set-string redis_stack.tag="latest" --reuse-values --namespace redis --create-namespace --wait
