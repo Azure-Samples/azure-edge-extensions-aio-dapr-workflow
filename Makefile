@@ -48,6 +48,7 @@ deploy_dapr_workflow_app:
 clean:
 	@echo "Cleaning up..."
 	k3d cluster delete $(K3DCLUSTERNAME)
+	az group delete -n $RESOURCEGROUP --yes
 
 install_redis:
 	@echo "Installing redis..."
