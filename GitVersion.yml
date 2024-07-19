@@ -19,7 +19,8 @@ branches:
   feature:
     regex: feature?[/-]
     mode: ContinuousDeployment
-    increment: Inherit
+    tag: useBranchName
+    increment: Patch
     prevent-increment-of-merged-branch-version: false
     track-merge-target: false
 ignore:
