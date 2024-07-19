@@ -19,9 +19,8 @@ branches:
   feature:
     regex: feature?[/-]
     mode: ContinuousDeployment
-    tag: useBranchName
     increment: Patch
-    prevent-increment-of-merged-branch-version: false
+    prevent-increment-of-merged-branch-version: true
     track-merge-target: false
 ignore:
   sha: []
