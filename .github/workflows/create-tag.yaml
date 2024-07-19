@@ -21,9 +21,23 @@ jobs:
       uses: gittools/actions/gitversion/execute@v1.0.0
       with:
         useConfigFile: true
-    - name: Create git tag
-      run: |
-        git tag ${{ env.GitVersion_MajorMinorPatch }}
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: ${{ env.GitVersion_MajorMinorPatch }}
+        release_name: Release ${{ env.GitVersion_MajorMinorPatch }}
+        body: |
+          Changes in this Release
+          - First Change
+          - Second Change
+        draft: false
+        prerelease: false
+    # - name: Create git tag
+    #   run: |
+    #     git tag ${{ env.GitVersion_MajorMinorPatch }}
     #   if: github.ref == 'refs/heads/main'
     - name: Push git tag
       run: git push origin ${{ env.GitVersion_MajorMinorPatch }}
