@@ -34,4 +34,4 @@ az keyvault create --enable-rbac-authorization false --name ${CLUSTER_NAME:0:24}
 
 # deploy AIO
 echo "Deploying AIO..."
-az iot ops init --include-dp --simulate-plc --cluster $CLUSTER_NAME --resource-group $RESOURCE_GROUP --kv-id $(az keyvault show --name ${CLUSTER_NAME:0:24} -o tsv --query id)
+az iot ops init --simulate-plc --cluster $CLUSTER_NAME --resource-group $RESOURCE_GROUP --kv-id $(az keyvault show --name ${CLUSTER_NAME:0:24} -o tsv --query id)
