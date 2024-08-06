@@ -7,7 +7,7 @@ RESOURCEGROUP := rg-dapr-workflow
 LOCATION := westeurope
 VERSION := $(shell grep "<Version>" ./src/AzureIoTOperations.DaprWorkflow/AzureIoTOperations.DaprWorkflow.csproj | sed 's/[^0-9.]*//g')
 
-all: create_k3d_cluster install_dapr deploy_aio deploy_dapr_components build_dapr_workflow_app deploy_dapr_workflow_app
+all: create_k3d_cluster install_dapr install_redis deploy_aio deploy_dapr_components build_dapr_workflow_app deploy_dapr_workflow_app
 
 create_k3d_cluster:
 	@echo "Creating k3d cluster..."
@@ -30,6 +30,7 @@ deploy_aio:
 deploy_dapr_components:
 	@echo "Deploying dapr components..."
 	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/components.yaml
+	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/dev.redis-statestore.yaml
 	@echo "Create service account..."
 	kubectl create sa daprworkflow-client -n azure-iot-operations --dry-run=client -o yaml | kubectl apply -f -
 
