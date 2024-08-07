@@ -1,4 +1,3 @@
-# Pub/sub component
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
@@ -7,32 +6,27 @@ metadata:
   annotations:
     dapr.io/component-container: >
       {
-        "name": "aio-mq-components",
-        "image": "ghcr.io/azure/iot-mq-dapr-components:latest",
+        "name": "iot-operations-dapr-components",
+        "image": "ghcr.io/azure/iot-operations-dapr-components:latest",
         "volumeMounts": [
-          {
-            "name": "daprworkflow-client-token",
-            "mountPath": "/var/run/secrets/tokens"
-          },
-          {
-            "name": "aio-ca-trust-bundle",
-            "mountPath": "/var/run/certs/aio-mq-ca-cert"
-          }
+          { "name": "daprworkflow-client-token", "mountPath": "/var/run/secrets/tokens" },
+          { "name": "aio-ca-trust-bundle", "mountPath": "/var/run/certs/aio-mq-ca-cert" }
         ]
       }
 spec:
-  type: pubsub.aio-mq-pubsub-pluggable # DO NOT CHANGE
+  type: pubsub.azure.iotoperations
   version: v1
   metadata:
-  - name: url
-    value: "aio-mq-dmqtt-frontend:8883"
-  - name: satTokenPath
-    value: "/var/run/secrets/tokens/daprworkflow-client-token"
-  - name: tlsEnabled
+  - name: hostname
+    value: aio-mq-dmqtt-frontend
+  - name: tcpPort
+    value: 8883
+  - name: useTls
     value: true
-  - name: caCertPath
-    value: "/var/run/certs/aio-mq-ca-cert/ca.crt"
----
+  - name: caFile
+    value: /var/run/certs/aio-mq-ca-cert/ca.crt
+  - name: satAuthFile
+    value: /var/run/secrets/tokens/daprworkflow-client-token
 # State Management component
 # apiVersion: dapr.io/v1alpha1
 # kind: Component

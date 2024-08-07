@@ -30,8 +30,8 @@ deploy_aio:
 
 deploy_dapr_components:
 	@echo "Deploying dapr components..."
-	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/components.yaml
-	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/dev.redis-statestore.yaml
+	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/components.yaml -n azure-iot-operations
+	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/dev.redis-statestore.yaml -n azure-iot-operations
 	@echo "Create service account..."
 	kubectl create sa daprworkflow-client -n azure-iot-operations --dry-run=client -o yaml | kubectl apply -f -
 
