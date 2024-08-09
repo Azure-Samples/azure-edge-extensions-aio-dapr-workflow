@@ -5,10 +5,18 @@ export RESOURCE_GROUP=$2
 export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 export LOCATION=$3
 
+# register providers
+az provider register -n "Microsoft.ExtendedLocation"
+az provider register -n "Microsoft.Kubernetes"
+az provider register -n "Microsoft.KubernetesConfiguration"
+az provider register -n "Microsoft.IoTOperationsOrchestrator"
+az provider register -n "Microsoft.IoTOperations"
+az provider register -n "Microsoft.DeviceRegistry"
+
 # install CLI extensions
 echo "Installing CLI extensions..."
-az extension add --name connectedk8s;
-az extension add --name azure-iot-ops;
+az extension add --name connectedk8s
+az extension add --name azure-iot-ops
 
 # create resource group
 if [ ! $(az group exists -n $RESOURCE_GROUP) ]; then
