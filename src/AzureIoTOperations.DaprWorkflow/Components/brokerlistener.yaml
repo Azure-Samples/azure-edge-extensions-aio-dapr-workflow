@@ -1,0 +1,21 @@
+apiVersion: mqttbroker.iotoperations.azure.com/v1beta1
+kind: BrokerListener
+metadata:
+  name: listener
+  namespace: azure-iot-operations
+spec:
+  brokerRef: broker
+  ports:
+  - authenticationRef: authn
+    authorizationRef: authz-sat
+    port: 8883
+    protocol: Mqtt
+    tls:
+      automatic:
+        issuerRef:
+          apiGroup: cert-manager.io
+          kind: Issuer
+          name: mq-dmqtt-frontend
+      mode: Automatic
+  serviceName: aio-mq-dmqtt-frontend
+  serviceType: ClusterIp

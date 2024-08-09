@@ -1,0 +1,20 @@
+apiVersion: mqttbroker.iotoperations.azure.com/v1beta1
+kind: BrokerAuthorization
+metadata:
+  name: "authz-sat"
+  namespace: azure-iot-operations
+spec:
+  authorizationPolicies:
+    rules:
+      - principals:
+          attributes:
+            - group: "mqtt-client"
+            - group: "dapr-workflow"
+        brokerResources:
+          - method: Connect
+          - method: Publish
+            topics:
+              - "telemetry"
+          - method: Subscribe
+            topics:
+              - "enriched-telemetry"

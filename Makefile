@@ -24,16 +24,22 @@ install_dapr:
 deploy_aio:
 	@echo "Deploying AIO..."
 	bash ./infra/deploy-aio.sh $(ARCCLUSTERNAME) $(RESOURCEGROUP) $(LOCATION)
+
+deploy_mqttui:
 	@echo "Deploying mqttui tool..."
 	kubectl create serviceaccount mqtt-client -n azure-iot-operations
+	kubectl annotate serviceaccount mqtt-client aio-mq-broker-auth/group=mqtt-client -n azure-iot-operations
 	kubectl apply -f https://raw.githubusercontent.com/Azure-Samples/explore-iot-operations/main/samples/quickstarts/mqtt-client.yaml
+
+deploy_authorization:
+	@echo "Deploying authorization..."
+	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/brokerauthorization.yaml -n azure-iot-operations
+	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/brokerlistener.yaml -n azure-iot-operations
 
 deploy_dapr_components:
 	@echo "Deploying dapr components..."
 	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/components.yaml -n azure-iot-operations
 	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/dev.redis-statestore.yaml -n azure-iot-operations
-	@echo "Create service account..."
-	kubectl create sa daprworkflow-client -n azure-iot-operations --dry-run=client -o yaml | kubectl apply -f -
 
 build_dapr_workflow_app:
 	@echo "Building dapr workflow app..."
