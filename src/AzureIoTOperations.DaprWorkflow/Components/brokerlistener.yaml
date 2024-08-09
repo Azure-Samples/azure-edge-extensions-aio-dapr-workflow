@@ -1,0 +1,43 @@
+apiVersion: mqttbroker.iotoperations.azure.com/v1beta1
+kind: BrokerListener
+metadata:
+  annotations:
+    management.azure.com/apiVersion: 2024-07-01-preview
+    management.azure.com/bridgeLocation: WestEurope
+    management.azure.com/cloudEnvironment: AzureCloud
+    management.azure.com/correlationId: 2aa9ad1d-5cb3-4dfe-b26c-f9cda0ac1474
+    management.azure.com/customLocation: /subscriptions/e8539ee2-fc38-4b40-8931-a829e7e9ef87/resourceGroups/rg-dapr-workflow/providers/Microsoft.ExtendedLocation/customLocations/arc-dapr-workflow-on6kw-ops-init-cl
+    management.azure.com/location: westeurope
+    management.azure.com/operationId: 8fa9da4c-81f2-4ae5-a5fa-eb359d6c2429*E8517DC6B931500A1439C81D872F744056B6144206E66C36BA79C24C27BBE663
+    management.azure.com/parentResourceId: /subscriptions/e8539ee2-fc38-4b40-8931-a829e7e9ef87/resourceGroups/rg-dapr-workflow/providers/Microsoft.IoTOperations/instances/arc-dapr-workflow-ops-instance/brokers/broker
+    management.azure.com/resourceId: /subscriptions/e8539ee2-fc38-4b40-8931-a829e7e9ef87/resourceGroups/rg-dapr-workflow/providers/Microsoft.IoTOperations/instances/arc-dapr-workflow-ops-instance/brokers/broker/listeners/listener
+    management.azure.com/systemData: '{"createdBy":"428c1e43-a5e6-40bb-86aa-334d7d23b821","createdByType":"User","createdAt":"2024-08-06T17:23:01.2605414Z","resourceUID":"eb7178c8-f95f-41ad-ad21-ac5a8070ee2f","clientLocation":"eastus2"}'
+    management.azure.com/tenantId: 16b3c013-d300-468d-ac64-7eda0820b6d3
+    traceparent: 00-a3e62f935e2041d0ae75cd7725fd621b-97fd9626db4ca3a5-01
+  creationTimestamp: "2024-08-06T17:23:04Z"
+  generation: 1
+  name: listener
+  namespace: azure-iot-operations
+  ownerReferences:
+  - apiVersion: mqttbroker.iotoperations.azure.com/v1beta1
+    kind: Broker
+    name: broker
+    uid: 829458f4-a68b-451a-b12b-021888b3f1b0
+  resourceVersion: "4965"
+  uid: f50e8fd6-2a0c-4056-b52c-d78e392955c8
+spec:
+  brokerRef: broker
+  ports:
+  - authenticationRef: authn
+    authorizationRef: authz-sat
+    port: 8883
+    protocol: Mqtt
+    tls:
+      automatic:
+        issuerRef:
+          apiGroup: cert-manager.io
+          kind: Issuer
+          name: mq-dmqtt-frontend
+      mode: Automatic
+  serviceName: aio-mq-dmqtt-frontend
+  serviceType: ClusterIp
