@@ -7,7 +7,7 @@ RESOURCEGROUP := rg-dapr-workflow
 LOCATION := westeurope
 VERSION := $(shell grep "<Version>" ./src/AzureIoTOperations.DaprWorkflow/AzureIoTOperations.DaprWorkflow.csproj | sed 's/[^0-9.]*//g')
 
-all: create_k3d_cluster install_dapr install_redis deploy_aio deploy_dapr_components build_dapr_workflow_app deploy_dapr_workflow_app
+all: create_k3d_cluster install_dapr install_redis deploy_aio deploy_mqttui deploy_dapr_components build_dapr_workflow_app deploy_dapr_workflow_app deploy_authorization
 
 create_k3d_cluster:
 	@echo "Creating k3d cluster..."
@@ -21,6 +21,12 @@ install_dapr:
 	helm repo update
 	helm upgrade --install dapr dapr/dapr --namespace dapr-system --create-namespace --wait
 
+install_redis:
+	@echo "Installing redis..."
+	helm repo add redis-stack https://redis-stack.github.io/helm-redis-stack/
+	helm repo update
+	helm upgrade --install redis-stack redis-stack/redis-stack --set-string redis_stack.tag="latest" --reuse-values --namespace redis --create-namespace --wait
+
 deploy_aio:
 	@echo "Deploying AIO..."
 	bash ./infra/deploy-aio.sh $(ARCCLUSTERNAME) $(RESOURCEGROUP) $(LOCATION)
@@ -30,11 +36,6 @@ deploy_mqttui:
 	kubectl create serviceaccount mqtt-client -n azure-iot-operations
 	kubectl annotate serviceaccount mqtt-client aio-mq-broker-auth/group=mqtt-client -n azure-iot-operations
 	kubectl apply -f https://raw.githubusercontent.com/Azure-Samples/explore-iot-operations/main/samples/quickstarts/mqtt-client.yaml
-
-deploy_authorization:
-	@echo "Deploying authorization..."
-	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/brokerauthorization.yaml -n azure-iot-operations
-	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/brokerlistener.yaml -n azure-iot-operations
 
 deploy_dapr_components:
 	@echo "Deploying dapr components..."
@@ -53,13 +54,12 @@ deploy_dapr_workflow_app:
 	sed -i "s?__{image_version}__?$(VERSION)?g" ./src/AzureIoTOperations.DaprWorkflow/Components/deploy.yaml
 	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/deploy.yaml -n azure-iot-operations
 
+deploy_authorization:
+	@echo "Deploying authorization..."
+	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/brokerauthorization.yaml -n azure-iot-operations
+	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/brokerlistener.yaml -n azure-iot-operations
+
 clean:
 	@echo "Cleaning up..."
 	k3d cluster delete $(K3DCLUSTERNAME)
 	az group delete -n $RESOURCEGROUP --yes
-
-install_redis:
-	@echo "Installing redis..."
-	helm repo add redis-stack https://redis-stack.github.io/helm-redis-stack/
-	helm repo update
-	helm upgrade --install redis-stack redis-stack/redis-stack --set-string redis_stack.tag="latest" --reuse-values --namespace redis --create-namespace --wait
