@@ -1,7 +1,9 @@
 #! /bin/bash
 
 export CLUSTER_NAME=$1
-export RESOURCE_GROUP=$2
+export STORAGE_ACCOUNT_NAME=$2
+export SCHEMA_REGISTRY_NAME=$3
+export RESOURCE_GROUP=$4
 export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 export LOCATION=$3
 
@@ -9,14 +11,14 @@ export LOCATION=$3
 az provider register -n "Microsoft.ExtendedLocation"
 az provider register -n "Microsoft.Kubernetes"
 az provider register -n "Microsoft.KubernetesConfiguration"
-az provider register -n "Microsoft.IoTOperationsOrchestrator"
 az provider register -n "Microsoft.IoTOperations"
 az provider register -n "Microsoft.DeviceRegistry"
 
 # install CLI extensions
 echo "Installing CLI extensions..."
-az extension add --name connectedk8s
-az extension add --name azure-iot-ops
+curl -L -o connectedk8s-1.10.0-py2.py3-none-any.whl https://github.com/AzureArcForKubernetes/azure-cli-extensions/raw/refs/heads/connectedk8s/public/cli-extensions/connectedk8s-1.10.0-py2.py3-none-any.whl   
+az extension add --upgrade --source connectedk8s-1.10.0-py2.py3-none-any.whl --yes
+az extension add --upgrade --name azure-iot-ops --yes
 
 # create resource group
 if [ ! $(az group exists -n $RESOURCE_GROUP) ]; then
@@ -26,7 +28,7 @@ fi
 
 # connect arc cluster
 echo "Connecting cluster $CLUSTER_NAME..."
-az connectedk8s connect -n $CLUSTER_NAME -l $LOCATION -g $RESOURCE_GROUP --subscription $SUBSCRIPTION_ID
+az connectedk8s connect -n $CLUSTER_NAME -l $LOCATION -g $RESOURCE_GROUP --subscription $SUBSCRIPTION_ID --enable-oidc-issuer --enable-workload-identity
 
 # get object id of app registration
 echo "Getting object id of app registration..."

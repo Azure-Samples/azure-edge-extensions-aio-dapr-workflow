@@ -3,6 +3,8 @@ K3DCLUSTERNAME := devcluster
 K3DREGISTRYNAME := k3d-devregistry.localhost:5500
 PORTFORWARDING := -p '5002:5002@loadbalancer' -p '5005:5005@loadbalancer' -p '8883:8883@loadbalancer' -p '1883:1883@loadbalancer'
 ARCCLUSTERNAME := arc-dapr-workflow
+STORAGEACCOUNTNAME := sadaprworkflow
+SCHEMAREGISTRYNAME := sr-dapr-workflow
 RESOURCEGROUP := rg-dapr-workflow
 LOCATION := westeurope
 VERSION := $(shell grep "<Version>" ./src/AzureIoTOperations.DaprWorkflow/AzureIoTOperations.DaprWorkflow.csproj | sed 's/[^0-9.]*//g')
@@ -29,7 +31,7 @@ install_redis:
 
 deploy_aio:
 	@echo "Deploying AIO..."
-	bash ./infra/deploy-aio.sh $(ARCCLUSTERNAME) $(RESOURCEGROUP) $(LOCATION)
+	bash ./infra/deploy-aio.sh $(ARCCLUSTERNAME) $(STORAGEACCOUNTNAME) $(SCHEMAREGISTRYNAME) $(RESOURCEGROUP) $(LOCATION)
 
 deploy_mqttui:
 	@echo "Deploying mqttui tool..."
