@@ -9,7 +9,7 @@ RESOURCEGROUP := rg-dapr-workflow
 LOCATION := westeurope
 VERSION := $(shell grep "<Version>" ./src/AzureIoTOperations.DaprWorkflow/AzureIoTOperations.DaprWorkflow.csproj | sed 's/[^0-9.]*//g')
 
-all: create_k3d_cluster install_dapr install_redis deploy_aio deploy_mqttui deploy_dapr_components build_dapr_workflow_app deploy_dapr_workflow_app deploy_authorization
+all: create_k3d_cluster install_dapr install_redis deploy_aio deploy_opcplcsimulator deploy_mqttui deploy_dapr_components build_dapr_workflow_app deploy_dapr_workflow_app deploy_authorization
 
 create_k3d_cluster:
 	@echo "Creating k3d cluster..."
@@ -32,6 +32,10 @@ install_redis:
 deploy_aio:
 	@echo "Deploying AIO..."
 	bash ./infra/deploy-aio.sh $(ARCCLUSTERNAME) $(STORAGEACCOUNTNAME) $(SCHEMAREGISTRYNAME) $(RESOURCEGROUP) $(LOCATION)
+
+deploy_opcplcsimulator:
+	@echo "Deploying OPC PLC Simulator..."
+	kubectl apply -f https://raw.githubusercontent.com/Azure-Samples/explore-iot-operations/main/samples/quickstarts/opc-plc-deployment.yaml
 
 deploy_mqttui:
 	@echo "Deploying mqttui tool..."
