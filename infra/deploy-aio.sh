@@ -28,7 +28,7 @@ fi
 
 # connect arc cluster
 echo "Connecting cluster $CLUSTER_NAME..."
-# az connectedk8s connect -n $CLUSTER_NAME -l $LOCATION -g $RESOURCE_GROUP --subscription $SUBSCRIPTION_ID --enable-oidc-issuer --enable-workload-identity
+az connectedk8s connect -n $CLUSTER_NAME -l $LOCATION -g $RESOURCE_GROUP --subscription $SUBSCRIPTION_ID --enable-oidc-issuer --enable-workload-identity
 
 # get object id of app registration
 echo "Getting object id of app registration..."
