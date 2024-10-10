@@ -64,9 +64,9 @@ az account show
 1. Open a new Terminal in VS Code and run:
 `kubectl exec --stdin --tty mqtt-client -n azure-iot-operations -- sh`
 2. At the shell in the mqtt-client pod, run the following command to publish to the MQ broker using the mosquitto client:
-`mosquitto_pub --host aio-mq-dmqtt-frontend --port 8883 --message '{"ambient":{"temperature":10}}' --topic "telemetry" --debug --cafile /var/run/certs/ca.crt -D CONNECT authentication-method 'K8S-SAT' -D CONNECT authentication-data $(cat /var/run/secrets/tokens/mq-sat)`
+`mosquitto_pub --host aio-broker --port 18883 --message '{"ambient":{"temperature":10}}' --topic "telemetry" --debug --cafile /var/run/certs/ca.crt -D CONNECT authentication-method 'K8S-SAT' -D CONNECT authentication-data $(cat /var/run/secrets/tokens/broker-sat)`
 3. Verify that an enriched message is publish on the telemetry-enriched topic by running the following command in another terminal window (step 1 required as well):
-`mosquitto_sub --host aio-mq-dmqtt-frontend --port 8883 --topic "enriched-telemetry" --debug --cafile /var/run/certs/ca.crt -D CONNECT authentication-method 'K8S-SAT' -D CONNECT authentication-data $(cat /var/run/secrets/tokens/mq-sat)`
+`mosquitto_sub --host aio-broker --port 18883 --topic "enriched-telemetry" --debug --cafile /var/run/certs/ca.crt -D CONNECT authentication-method 'K8S-SAT' -D CONNECT authentication-data $(cat /var/run/secrets/tokens/broker-sat)`
 
 ### Deploy a new version of the application
 

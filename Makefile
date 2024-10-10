@@ -3,11 +3,13 @@ K3DCLUSTERNAME := devcluster
 K3DREGISTRYNAME := k3d-devregistry.localhost:5500
 PORTFORWARDING := -p '5002:5002@loadbalancer' -p '5005:5005@loadbalancer' -p '8883:8883@loadbalancer' -p '1883:1883@loadbalancer'
 ARCCLUSTERNAME := arc-dapr-workflow
+STORAGEACCOUNTNAME := sadaprworkflow
+SCHEMAREGISTRYNAME := sr-dapr-workflow
 RESOURCEGROUP := rg-dapr-workflow
 LOCATION := westeurope
 VERSION := $(shell grep "<Version>" ./src/AzureIoTOperations.DaprWorkflow/AzureIoTOperations.DaprWorkflow.csproj | sed 's/[^0-9.]*//g')
 
-all: create_k3d_cluster install_dapr install_redis deploy_aio deploy_mqttui deploy_dapr_components build_dapr_workflow_app deploy_dapr_workflow_app deploy_authorization
+all: create_k3d_cluster install_dapr install_redis deploy_aio deploy_opcplcsimulator deploy_mqttui deploy_dapr_components build_dapr_workflow_app deploy_dapr_workflow_app deploy_authorization
 
 create_k3d_cluster:
 	@echo "Creating k3d cluster..."
@@ -29,7 +31,11 @@ install_redis:
 
 deploy_aio:
 	@echo "Deploying AIO..."
-	bash ./infra/deploy-aio.sh $(ARCCLUSTERNAME) $(RESOURCEGROUP) $(LOCATION)
+	bash ./infra/deploy-aio.sh $(ARCCLUSTERNAME) $(STORAGEACCOUNTNAME) $(SCHEMAREGISTRYNAME) $(RESOURCEGROUP) $(LOCATION)
+
+deploy_opcplcsimulator:
+	@echo "Deploying OPC PLC Simulator..."
+	kubectl apply -f https://raw.githubusercontent.com/Azure-Samples/explore-iot-operations/main/samples/quickstarts/opc-plc-deployment.yaml
 
 deploy_mqttui:
 	@echo "Deploying mqttui tool..."
@@ -57,7 +63,7 @@ deploy_dapr_workflow_app:
 deploy_authorization:
 	@echo "Deploying authorization..."
 	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/brokerauthorization.yaml -n azure-iot-operations
-	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/brokerlistener.yaml -n azure-iot-operations
+	kubectl patch brokerlistener default -n azure-iot-operations --type='json' -p='[{"op": "add", "path": "/spec/ports/0/authorizationRef", "value": "authz-sat"}]'
 
 clean:
 	@echo "Cleaning up..."
