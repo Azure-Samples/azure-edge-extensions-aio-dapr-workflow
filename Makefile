@@ -63,7 +63,7 @@ deploy_dapr_workflow_app:
 deploy_authorization:
 	@echo "Deploying authorization..."
 	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/brokerauthorization.yaml -n azure-iot-operations
-	kubectl apply -f ./src/AzureIoTOperations.DaprWorkflow/Components/brokerlistener.yaml -n azure-iot-operations
+	kubectl patch brokerlistener default -n azure-iot-operations --type='json' -p='[{"op": "add", "path": "/spec/ports/0/authorizationRef", "value": "authz-sat"}]'
 
 clean:
 	@echo "Cleaning up..."
