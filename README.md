@@ -1,5 +1,8 @@
 # Azure Edge Extensions - AIO Dapr Workflow
 
+> [!IMPORTANT]  
+> This repositories is compatible with Azure IoT Operations [v0.7.31](https://github.com/Azure/azure-iot-operations/releases/tag/v0.7.31).
+
 This project is a sample demonstrating how to build custom workloads for [Azure IoT Operations (AIO)](https://learn.microsoft.com/en-us/azure/iot-operations/get-started/overview-iot-operations) utilizing its Azure IoT MQ component and the [Dapr Workflow](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/) building block.
 
 ## Overview

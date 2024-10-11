@@ -18,7 +18,7 @@ az provider register -n "Microsoft.DeviceRegistry"
 echo "Installing CLI extensions..."
 curl -L -o connectedk8s-1.10.0-py2.py3-none-any.whl https://github.com/AzureArcForKubernetes/azure-cli-extensions/raw/refs/heads/connectedk8s/public/cli-extensions/connectedk8s-1.10.0-py2.py3-none-any.whl   
 az extension add --upgrade --source connectedk8s-1.10.0-py2.py3-none-any.whl --yes
-az extension add --upgrade --name azure-iot-ops --yes
+az extension add --upgrade --name azure-iot-ops --version 0.7.0b1 --yes
 
 # create resource group
 if [ !$(az group exists -n $RESOURCE_GROUP) ]; then
@@ -28,7 +28,7 @@ fi
 
 # connect arc cluster
 echo "Connecting cluster $CLUSTER_NAME..."
-az connectedk8s connect -n $CLUSTER_NAME -l $LOCATION -g $RESOURCE_GROUP --subscription $SUBSCRIPTION_ID --enable-oidc-issuer --enable-workload-identity
+az connectedk8s connect -n $CLUSTER_NAME -l $LOCATION -g $RESOURCE_GROUP --subscription $SUBSCRIPTION_ID
 
 # get object id of app registration
 echo "Getting object id of app registration..."
@@ -36,11 +36,7 @@ export OBJECT_ID=$(az ad sp show --id bc313c14-388c-4e7d-a58e-70017303ee3b --que
 
 # enable custom location support on cluster
 echo "Enabling custom location support on cluster $CLUSTER_NAME..."
-# az connectedk8s enable-features -n $CLUSTER_NAME -g $RESOURCE_GROUP --custom-locations-oid $OBJECT_ID --features cluster-connect custom-locations
-
-# create keyvault
-# echo "Creating keyvault..."
-# az keyvault create --enable-rbac-authorization --name ${CLUSTER_NAME:0:24} --resource-group $RESOURCE_GROUP
+az connectedk8s enable-features -n $CLUSTER_NAME -g $RESOURCE_GROUP --custom-locations-oid $OBJECT_ID --features cluster-connect custom-locations
 
 # create storage account
 echo "Creating storage account"
