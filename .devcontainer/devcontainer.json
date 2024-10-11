@@ -6,6 +6,7 @@
 	"image": "mcr.microsoft.com/devcontainers/base:jammy",
 	"features": {
 		"ghcr.io/devcontainers/features/azure-cli:1": {
+			"version": "2.64.0",
 			"extensions": "connectedk8s,k8s-extension,azure-iot-ops"
 		},
 		"ghcr.io/devcontainers/features/dotnet:2": {

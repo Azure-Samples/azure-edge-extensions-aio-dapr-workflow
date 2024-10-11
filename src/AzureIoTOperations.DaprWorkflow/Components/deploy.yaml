@@ -38,18 +38,18 @@ spec:
           sources:
             - serviceAccountToken:
                 path: daprworkflow-client-token
-                audience: aio-mq
+                audience: aio-internal
                 expirationSeconds: 86400
 
     # Certificate chain for Dapr to validate the MQTT broker
       - name: aio-ca-trust-bundle
         configMap:
-          name: aio-ca-trust-bundle-test-only
+          name: azure-iot-operations-aio-ca-trust-bundle
 
       containers:
       # Container for the Dapr Workflow C# Application 
       - name: daprworkflow
-        image: __{container_registry}__/daprworkflow:__{image_version}__
+        image: k3d-devregistry.localhost:5500/daprworkflow:1.0.4
         ports:
         - containerPort: 5002
         resources:
