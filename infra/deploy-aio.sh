@@ -16,8 +16,7 @@ az provider register -n "Microsoft.DeviceRegistry"
 
 # install CLI extensions
 echo "Installing CLI extensions..."
-curl -L -o connectedk8s-1.10.0-py2.py3-none-any.whl https://github.com/AzureArcForKubernetes/azure-cli-extensions/raw/refs/heads/connectedk8s/public/cli-extensions/connectedk8s-1.10.0-py2.py3-none-any.whl   
-az extension add --upgrade --source connectedk8s-1.10.0-py2.py3-none-any.whl --yes
+az extension add --upgrade --name connectedk8s --yes
 az extension add --upgrade --name azure-iot-ops --version 0.7.0b1 --yes
 
 # create resource group
