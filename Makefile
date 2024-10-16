@@ -40,7 +40,7 @@ deploy_opcplcsimulator:
 deploy_mqttui:
 	@echo "Deploying mqttui tool..."
 	kubectl create serviceaccount mqtt-client -n azure-iot-operations
-	kubectl annotate serviceaccount mqtt-client aio-mq-broker-auth/group=mqtt-client -n azure-iot-operations
+	kubectl annotate serviceaccount mqtt-client aio-broker-auth/group=mqtt-client -n azure-iot-operations
 	kubectl apply -f https://raw.githubusercontent.com/Azure-Samples/explore-iot-operations/main/samples/quickstarts/mqtt-client.yaml
 
 deploy_dapr_components:

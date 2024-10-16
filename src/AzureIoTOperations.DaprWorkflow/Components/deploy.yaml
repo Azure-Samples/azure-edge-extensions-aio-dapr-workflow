@@ -4,7 +4,7 @@ metadata:
   name: daprworkflow-client
   namespace: azure-iot-operations
   annotations:
-    aio-mq-broker-auth/group: dapr-workflow
+    aio-broker-auth/group: dapr-workflow
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -49,7 +49,7 @@ spec:
       containers:
       # Container for the Dapr Workflow C# Application 
       - name: daprworkflow
-        image: k3d-devregistry.localhost:5500/daprworkflow:1.0.4
+        image: __{container_registry}__/daprworkflow:__{image_version}__
         ports:
         - containerPort: 5002
         resources:
