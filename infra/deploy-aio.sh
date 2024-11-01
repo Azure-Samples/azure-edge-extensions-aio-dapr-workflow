@@ -17,7 +17,7 @@ az provider register -n "Microsoft.DeviceRegistry"
 # install CLI extensions
 echo "Installing CLI extensions..."
 az extension add --upgrade --name connectedk8s --yes
-az extension add --upgrade --name azure-iot-ops --version 0.7.0b1 --yes
+az extension add --upgrade --name azure-iot-ops --version 0.8.0b1 --yes
 
 # create resource group
 if [ !$(az group exists -n $RESOURCE_GROUP) ]; then
@@ -47,5 +47,5 @@ srId=$(az iot ops schema registry create -n $SCHEMA_REGISTRY_NAME -g $RESOURCE_G
 
 # deploy AIO
 echo "Deploying AIO..."
-az iot ops init --debug --cluster $CLUSTER_NAME -g $RESOURCE_GROUP --sr-resource-id $srId --kubernetes-distro K3s
-az iot ops create -n $CLUSTER_NAME --cluster $CLUSTER_NAME -g $RESOURCE_GROUP
+az iot ops init --debug --cluster $CLUSTER_NAME -g $RESOURCE_GROUP
+az iot ops create -n $CLUSTER_NAME --cluster $CLUSTER_NAME -g $RESOURCE_GROUP --sr-resource-id $srId --kubernetes-distro K3s
