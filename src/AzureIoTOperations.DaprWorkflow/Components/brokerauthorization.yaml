@@ -1,4 +1,4 @@
-apiVersion: mqttbroker.iotoperations.azure.com/v1beta1
+apiVersion: mqttbroker.iotoperations.azure.com/v1
 kind: BrokerAuthorization
 metadata:
   name: "authz-sat"

@@ -17,7 +17,7 @@ az provider register -n "Microsoft.DeviceRegistry"
 # install CLI extensions
 echo "Installing CLI extensions..."
 az extension add --upgrade --name connectedk8s --yes
-az extension add --upgrade --name azure-iot-ops --version 0.8.0b1 --yes
+az extension add --upgrade --name azure-iot-ops --yes
 
 # create resource group
 if [ !$(az group exists -n $RESOURCE_GROUP) ]; then
