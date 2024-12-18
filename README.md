@@ -1,6 +1,6 @@
 # Azure Edge Extensions - AIO Dapr Workflow
 
-This project is a sample demonstrating how to build custom workloads for [Azure IoT Operations (AIO)](https://learn.microsoft.com/en-us/azure/iot-operations/get-started/overview-iot-operations) utilizing its Azure IoT MQ component and the [Dapr Workflow](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/) building block.
+This project is a sample demonstrating how to build custom workloads for [Azure IoT Operations (AIO)](https://learn.microsoft.com/en-us/azure/iot-operations/get-started/overview-iot-operations) utilizing its MQTT broker component and the [Dapr Workflow](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/) building block.
 
 ## Overview
 
@@ -12,9 +12,9 @@ The Dapr runtime spins up a sidecar container that runs the Dapr APIs like the D
 
 ## Solution Architecture
 
-The architecture design of this solution is built on top of the Azure IoT Operations platform and utilizes messaging capabilities provided by the Azure IoT MQ component. Custom workloads can be easily plugged by using both the Dapr Pub/Sub and Dapr Workflow building blocks and their APIs that are provided in a sidecar architecture, consumable via http or grpc. Exensibility of the Dapr runtime enables to inject pluggable components to make Azure IoT MQ available as a Pub/Sub and StateStore component.
+The architecture design of this solution is built on top of the Azure IoT Operations platform and utilizes messaging capabilities provided by the MQTT broker component. Custom workloads can be easily plugged by using both the Dapr Pub/Sub and Dapr Workflow building blocks and their APIs that are provided in a sidecar architecture, consumable via http or grpc. Extensibility of the Dapr runtime enables to inject pluggable components to make the MQTT broker available as a Pub/Sub and StateStore component.
 
-The custom workload is a .NET application that leverages the Dapr PubSub building block to subscribe and publish messages to the Azure IoT MQ broker. The application itself implements a Dapr Workflow to orchestrate the order of single steps that can be used to enrich, transform, filter or even publish data.
+The custom workload is a .NET application that leverages the Dapr PubSub building block to subscribe and publish messages to the MQTT broker. The application itself implements a Dapr Workflow to orchestrate the order of single steps that can be used to enrich, transform, filter or even publish data.
 
 The following diagram illustrates the architecture of the solution:
 ![architecture](img/architecture.png)
@@ -40,11 +40,10 @@ This project framework provides the following features:
 ### Installation
 
 1. Fork this repository to your own GitHub account or use it from the original repository
-2. `cd azure-edge-extensions-aio-dapr-workflow`
-3. [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Azure-Samples/azure-edge-extensions-aio-dapr-workflow?quickstart=1)
-4. Once the codespace is ready, select the menu button at the top left, then select Open in VS Code Desktop
+2. [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Azure-Samples/azure-edge-extensions-aio-dapr-workflow?quickstart=1)
+3. Once the codespace is ready, select the menu button at the top left, then select Open in VS Code Desktop
 ![vs-code](img/vs-code-desktop.png)
-5. Once the setup has been initialized, the dev container will have initialized K3D local container registry for development purposes. The environment is now ready for deploying the K3D cluster, initializing Azure IoT Operations and Azure Arc. The container registry is available inside the dev container and inside the K3D cluster under `k3d-devregistry.localhost:5500`
+4. Once the setup has been initialized, the dev container will have initialized K3D local container registry for development purposes. The environment is now ready for deploying the K3D cluster, initializing Azure IoT Operations and Azure Arc. The container registry is available inside the dev container and inside the K3D cluster under `k3d-devregistry.localhost:5500`
 
 ### Quickstart: Deploy Azure IoT Operations
 
@@ -53,13 +52,13 @@ This project framework provides the following features:
 
 ``` bash
 az login # optionally add --tenant "<tenant_id>"
-az account set --subscription "mysubscription_name_or_id"
+az account set --subscription "<mysubscription_name_or_id>"
 az account show
 ```
 
 * Run `make` in the root folder of the workspace to deploy the K3D cluster, Azure Arc-enable the cluster, install Azure IoT Operations and deploy the Dapr Workflow application as well. If you want to deploy only a specific target in the makefile you can run `make <target>`.
 
-### Publish Data to Azure IoT MQ
+### Publish Data to built-in MQTT Broker
 
 1. Open a new Terminal in VS Code and run:
 `kubectl exec --stdin --tty mqtt-client -n azure-iot-operations -- sh`
