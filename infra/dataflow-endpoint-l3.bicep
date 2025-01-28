@@ -1,8 +1,12 @@
-param aioInstanceName string
-param customLocationName string
+// ------------------------------------------------------------
+// Parameters
+// ------------------------------------------------------------
 
-output l3MqttDataflowEndpointName string = defaultMqttBrokerDataflowEndpoint.name
-output l4MqttDataflowEndpointName string = l4MqttBrokerDataflowEndpoint.name
+@description('AIO Instance Name')
+param aioInstanceName string
+
+@description('Custom Location Name')
+param customLocationName string
 
 resource aioInstance 'Microsoft.IoTOperations/instances@2024-11-01' existing = {
   name: aioInstanceName
@@ -12,7 +16,11 @@ resource customLocation 'Microsoft.ExtendedLocation/customLocations@2021-08-31-p
   name: customLocationName
 }
 
-resource defaultMqttBrokerDataflowEndpoint 'Microsoft.IoTOperations/instances/dataflowEndpoints@2024-11-01' = {
+// ------------------------------------------------------------
+// Dataflow Endpoints
+// ------------------------------------------------------------
+
+resource l3MqttBrokerDataflowEndpoint 'Microsoft.IoTOperations/instances/dataflowEndpoints@2024-11-01' = {
   parent: aioInstance
   name: 'mqtt-local'
   extendedLocation: {
@@ -71,3 +79,13 @@ resource l4MqttBrokerDataflowEndpoint 'Microsoft.IoTOperations/instances/dataflo
     }
   }
 }
+
+// ------------------------------------------------------------
+// Outputs
+// ------------------------------------------------------------
+
+@description('L3 Mqtt Dataflow Endpoint Name')
+output l3MqttDataflowEndpointName string = l3MqttBrokerDataflowEndpoint.name
+
+@description('L4 Mqtt Dataflow Endpoint Name')
+output l4MqttDataflowEndpointName string = l4MqttBrokerDataflowEndpoint.name

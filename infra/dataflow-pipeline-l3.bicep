@@ -1,6 +1,17 @@
+// ------------------------------------------------------------
+// Parameters
+// ------------------------------------------------------------
+
+@description('AIO Instance Name')
 param aioInstanceName string
+
+@description('Custom Location Name')
 param customLocationName string
+
+@description('L3 MQTT Dataflow Endpoint Name')
 param l3MqttDataflowEndpointName string
+
+@description('L4 MQTT Dataflow Endpoint Name')
 param l4MqttDataflowEndpointName string
 
 resource aioInstance 'Microsoft.IoTOperations/instances@2024-11-01' existing = {
@@ -15,6 +26,10 @@ resource defaultDataflowProfile 'Microsoft.IoTOperations/instances/dataflowProfi
   parent: aioInstance
   name: 'default'
 }
+
+// ------------------------------------------------------------
+// Dataflow Pipelines
+// ------------------------------------------------------------
 
 resource dataflowl3l4 'Microsoft.IoTOperations/instances/dataflowProfiles/dataflows@2024-11-01' = {
   parent: defaultDataflowProfile

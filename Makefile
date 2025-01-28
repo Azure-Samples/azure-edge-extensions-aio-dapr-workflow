@@ -12,11 +12,16 @@ CUSTOMLOCATION := $(shell az customlocation list -g $(RESOURCEGROUP) | jq -c .[0
 all: create_k3d_cluster install_dapr install_redis deploy_aio deploy_opcplcsimulator deploy_mqttui deploy_dapr_components build_dapr_workflow_app deploy_dapr_workflow_app deploy_authorization
 
 deploy-dataflows:
+# az deployment group create \
+#       --resource-group $(RESOURCEGROUP) \
+# 	  --name AIO-Dataflows-l3 \
+#       --template-file ./infra/dataflow-main-l3.bicep \
+#       --parameters aioInstanceName=$(ARCCLUSTERNAME) customLocationName=$(CUSTOMLOCATION)
 	az deployment group create \
-          --resource-group $(RESOURCEGROUP) \
-		  --name AIO-Dataflows \
-          --template-file ./infra/dataflow-main.bicep \
-          --parameters aioInstanceName=$(ARCCLUSTERNAME) customLocationName=$(CUSTOMLOCATION)
+		--resource-group $(RESOURCEGROUP) \
+		--name AIO-Dataflows-l4 \
+		--template-file ./infra/dataflow-main-l4.bicep \
+		--parameters aioInstanceName=$(ARCCLUSTERNAME) customLocationName=$(CUSTOMLOCATION)
 
 create_k3d_cluster:
 	@echo "Creating k3d cluster..."
