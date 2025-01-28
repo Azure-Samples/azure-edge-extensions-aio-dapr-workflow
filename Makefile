@@ -8,8 +8,15 @@ SCHEMAREGISTRYNAME := sr-dapr-workflow
 RESOURCEGROUP := rg-dapr-workflow
 LOCATION := westeurope
 VERSION := $(shell grep "<Version>" ./src/AzureIoTOperations.DaprWorkflow/AzureIoTOperations.DaprWorkflow.csproj | sed 's/[^0-9.]*//g')
-
+CUSTOMLOCATION := $(shell az customlocation list -g $(RESOURCEGROUP) | jq -c .[0].name)
 all: create_k3d_cluster install_dapr install_redis deploy_aio deploy_opcplcsimulator deploy_mqttui deploy_dapr_components build_dapr_workflow_app deploy_dapr_workflow_app deploy_authorization
+
+deploy-dataflows:
+	az deployment group create \
+          --resource-group $(RESOURCEGROUP) \
+		  --name AIO-Dataflows \
+          --template-file ./infra/dataflow-main.bicep \
+          --parameters aioInstanceName=$(ARCCLUSTERNAME) customLocationName=$(CUSTOMLOCATION)
 
 create_k3d_cluster:
 	@echo "Creating k3d cluster..."
