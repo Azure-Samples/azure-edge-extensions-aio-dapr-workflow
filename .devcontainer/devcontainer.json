@@ -22,6 +22,7 @@
 		"memory": "8gb",
 		"storage": "32gb"
 	},
+	"remoteUser": "root",
 	"postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh",
 	"customizations": {
 		"vscode": {
