@@ -1,0 +1,72 @@
+apiVersion: connectivity.iotoperations.azure.com/v1
+kind: Dataflow
+metadata:
+  name: passthrough
+  namespace: azure-iot-operations
+  resourceVersion: "177653"
+spec:
+  mode: Enabled
+  profileRef: default
+  operations:
+  - operationType: Source
+    sourceSettings:
+      dataSources:
+      - azure-iot-operations/data/boiler
+      endpointRef: default
+      serializationFormat: Json
+  - builtInTransformationSettings:
+      datasets: []
+      filter: []
+      map:
+      - inputs:
+        - '*'
+        output: '*'
+        type: PassThrough
+      - expression: '"1.0"'
+        inputs: []
+        output: '"specversion"'
+        type: NewProperties
+      - expression: '"dmq.testResult.New.v1"'
+        inputs: []
+        output: '"type"'
+        type: NewProperties
+      - expression: '"poc/localuns/microsoft/dmq"'
+        inputs: []
+        output: '"source"'
+        type: NewProperties
+      # - inputs:
+      #   - $metadata.topic
+      #   output: origin_topic
+      - inputs:
+        - $metadata.user_property.id
+        output: id
+      - inputs: 
+        - $metadata.user_property.time
+        output: '"time"'
+      # - inputs:
+      #   - Temperature.Value
+      #   # - 'SerialNumber.Value'
+      #   expression: $1
+      #   output: 'data.value'
+      # - inputs:
+      #   - Humidity.*
+      #   # - 'SerialNumber.Value'
+      #   expression: $1
+      #   output: 'data.val.*'
+      - inputs:
+        - Temperature.Value
+        output: 'data.temperature.value'
+      - inputs:
+        - Temperature.SourceTimestamp
+        output: 'data.temperature.sourceTimestamp'
+      - inputs: []
+        expression: '"ns=3;s=FastUInt10"'
+        output: 'data.temperature.nodeId'
+        type: NewProperties
+
+      serializationFormat: Json
+    operationType: BuiltInTransformation
+  - destinationSettings:
+      dataDestination: new
+      endpointRef: default
+    operationType: Destination
